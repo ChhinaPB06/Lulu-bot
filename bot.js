@@ -2,6 +2,7 @@ import 'dotenv/config';
 import fetch from 'node-fetch';
 import * as fs from 'fs';
 import * as cheerio from 'cheerio';
+import { HttpsProxyAgent } from 'https-proxy-agent';
 
 /** -------------------------------------------
  *  CONFIG
@@ -35,27 +36,20 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
  *  FETCH
  *  ------------------------------------------- */
 async function fetchHTML(url) {
+  const headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36",
+    "Accept-Language": "en-CA,en;q=0.9"
+  };
+
+  // Use proxy only when provided
+  const proxy = process.env.PROXY_URL ? new HttpsProxyAgent(process.env.PROXY_URL) : undefined;
+
   const res = await fetch(url, {
-    headers: {
-      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36",
-      "Accept-Language": "en-CA,en;q=0.9"
-    }
+    headers,
+    ...(proxy ? { agent: proxy } : {})
   });
   if (!res.ok) throw new Error(`Fetch failed ${res.status} for ${url}`);
   return await res.text();
-}
-
-// Parses "$29", "C$39", "CA$39", "$39.00"
-function parsePrice(text) {
-  if (!text) return null;
-  const m = text.replace(/,/g, '').match(/(\$|C\$|CA\$)\s?(\d+(?:\.\d+)?)/i);
-  return m ? parseFloat(m[2]) : null;
-}
-
-function normalizeProduct({title, url, price, breadcrumbText}) {
-  const isAccessory = ACCESSORY_REGEX.test((breadcrumbText || "") + " " + (title || ""));
-  const isMen = MEN_REGEX.test(breadcrumbText || "") || /\/men[-/]/i.test(url);
-  return { title, url, price, breadcrumbText, isAccessory, isMen };
 }
 
 /** -------------------------------------------
