@@ -11,5 +11,6 @@
     "cheerio": "^1.0.0",
     "node-fetch": "^3.3.2",
     "dotenv": "^16.4.5"
+    "https-proxy-agent": "^7.0.4"
   }
 }
