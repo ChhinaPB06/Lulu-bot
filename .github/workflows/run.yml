@@ -19,3 +19,4 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           CURRENCY: CAD
           PRICE_LIMIT: "40"
+          PROXY_URL: ${{ secrets.PROXY_URL }}
