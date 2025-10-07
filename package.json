@@ -1,0 +1,15 @@
+{
+  "name": "lululemon-mens-under-40-alerts",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Scans Lululemon men's sale/resale pages and Telegram-notifies you for items priced at or below $40 (excludes accessories).",
+  "scripts": {
+    "start": "node bot.js",
+    "lint": "echo \"(Optional)\""
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "node-fetch": "^3.3.2",
+    "dotenv": "^16.4.5"
+  }
+}
